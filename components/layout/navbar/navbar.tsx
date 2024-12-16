@@ -6,6 +6,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { Navlinks } from "./navlinks";
 
 export default function Navbar() {
   return (
