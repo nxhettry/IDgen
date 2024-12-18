@@ -34,6 +34,8 @@ export default function Home() {
         name: file.name,
         size: file.size,
       });
+
+      console.log(file);
     }
   };
 
