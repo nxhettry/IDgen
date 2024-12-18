@@ -2,15 +2,13 @@
 import React, { useState } from "react";
 import { HoveredLink, Menu, MenuItem } from "@/components/ui/navbar-menu";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import { button, p } from "framer-motion/client";
+import { Button } from "@/components/ui/button";
 
 export default function Navbar({ className }: { className?: string }) {
   const { data: session } = useSession();
   const [active, setActive] = useState<string | null>(null);
-
-  if (session) {
-    console.log(session);
-  }
 
   return (
     <div
@@ -30,9 +28,28 @@ export default function Navbar({ className }: { className?: string }) {
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Profile">
           <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="/profile">Set Up</HoveredLink>
+            {session ? (
+              <>
+                <HoveredLink href="/profile">Set Up</HoveredLink>
+
+                <HoveredLink href="#">
+                  <Button
+                    onClick={() => signIn("google")}
+                    className="w-16 bg-red-500 text-sm"
+                  >
+                    Sign Out
+                  </Button>
+                </HoveredLink>
+              </>
+            ) : (
+              <HoveredLink href="#">
+                <button onClick={() => signIn("google")}>Sign In</button>
+              </HoveredLink>
+            )}
           </div>
         </MenuItem>
+
+        {session && <p>Welcome {session.user?.name?.slice("")}</p>}
       </Menu>
     </div>
   );
