@@ -18,12 +18,12 @@ export default function Navbar({ className }: { className?: string }) {
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Students">
           <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="/students">Students</HoveredLink>
+            <HoveredLink href="/students">View All</HoveredLink>
           </div>
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Profile">
           <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="/profile">Profile</HoveredLink>
+            <HoveredLink href="/profile">Set Up</HoveredLink>
           </div>
         </MenuItem>
       </Menu>
