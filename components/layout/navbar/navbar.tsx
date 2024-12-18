@@ -1,24 +1,28 @@
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import { Navlinks } from "./navlinks";
+"use client";
+import React, { useState } from "react";
+import { HoveredLink, Menu, MenuItem } from "@/components/ui/navbar-menu";
+import { cn } from "@/lib/utils";
 
-export default function Navbar() {
+export default function Navbar({ className }: { className?: string }) {
+  const [active, setActive] = useState<string | null>(null);
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>School</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <NavigationMenuLink>Link</NavigationMenuLink>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <div
+      className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}
+    >
+      <Menu setActive={setActive}>
+        <MenuItem setActive={setActive} active={active} item="School">
+          <div className="flex flex-col space-y-4 text-sm">
+            <HoveredLink href="/schools">View All</HoveredLink>
+            <HoveredLink href="/schools/addnew">Add new</HoveredLink>
+          </div>
+        </MenuItem>
+        <MenuItem setActive={setActive} active={active} item="Students">
+          <HoveredLink href="/students">Students</HoveredLink>
+        </MenuItem>
+        <MenuItem setActive={setActive} active={active} item="Profile">
+          <HoveredLink href="/profile">Profile</HoveredLink>
+        </MenuItem>
+      </Menu>
+    </div>
   );
 }
