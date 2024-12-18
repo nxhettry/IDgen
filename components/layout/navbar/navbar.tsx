@@ -2,8 +2,7 @@
 import React, { useState } from "react";
 import { HoveredLink, Menu, MenuItem } from "@/components/ui/navbar-menu";
 import { cn } from "@/lib/utils";
-import { useSession, signIn } from "next-auth/react";
-import { button, p } from "framer-motion/client";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 
 export default function Navbar({ className }: { className?: string }) {
@@ -34,7 +33,7 @@ export default function Navbar({ className }: { className?: string }) {
 
                 <HoveredLink href="#">
                   <Button
-                    onClick={() => signIn("google")}
+                    onClick={() => signOut()}
                     className="w-16 bg-red-500 text-sm"
                   >
                     Sign Out
@@ -49,7 +48,7 @@ export default function Navbar({ className }: { className?: string }) {
           </div>
         </MenuItem>
 
-        {session && <p>Welcome {session.user?.name?.slice("")}</p>}
+        {session && <p>Welcome {session.user?.name?.split(" ")}</p>}
       </Menu>
     </div>
   );
