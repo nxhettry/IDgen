@@ -1,8 +1,9 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { User } from "@/models/UserSchema";
+import { connectDB } from "./db";
 
 export const authOptions: NextAuthOptions = {
-  // Secret for Next-auth, without this JWT encryption/decryption won't work
   secret: process.env.NEXTAUTH_SECRET,
 
   // Configure one or more authentication providers
@@ -12,4 +13,46 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
+
+  callbacks: {
+    async signIn({ user }) {
+      await connectDB();
+
+      const existingUser = await User.findOne({ email: user.email });
+
+      if (!existingUser) {
+        await User.create({
+          email: user.email,
+          provider: "google",
+          isPremium: false,
+        });
+      }
+
+      return true;
+    },
+
+    async jwt({ token, user }) {
+      if (user) {
+        await connectDB();
+
+        const dbUser = await User.findOne({ email: user.email });
+
+        if (dbUser) {
+          token.isPremium = dbUser.isPremium;
+          token.tokenExpiry = 1200 * 60 * 1.5;
+        }
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.isPremium = token.isPremium;
+        session.user.expiryDate = token.expiryDate;
+      }
+
+      return session;
+    },
+  },
 };

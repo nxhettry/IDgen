@@ -1,11 +1,11 @@
 import { Schema, Document, mongoose } from "mongoose";
-import { ExcelDataType } from "@/components/ui/table/Table";
 import { v4 as uuidv4 } from "uuid";
 
 export interface IUser extends Document {
   email: string;
-  password: string;
-  data: ExcelDataType[];
+  password: string | null;
+  provider: "email" | "google" | null;
+  isPremium: boolean;
 }
 
 const userSchema = new Schema(
@@ -15,14 +15,13 @@ const userSchema = new Schema(
       default: uuidv4(),
     },
     email: { type: String, required: true },
-    password: { type: String, required: true },
-    data: {
-      type: [],
-      timeStamp: { type: Date, default: Date.now },
-    },
+    password: { type: String, default: null },
+    isPremium: { type: Boolean, default: false },
+    provider: { type: String, default: null },
   },
   { timestamps: true }
 );
 
-export const User =
-  mongoose.model<IUser>("User", userSchema) || mongoose.models.User;
+const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+
+export default User;
