@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import User from "@/models/UserSchema";
 import { connectDB } from "./db";
+import { redirect } from "next/dist/server/api-utils";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -13,6 +14,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
+  pages: {
+    signOut: "/", // Redirect to home page after sign out
+  },
 
   callbacks: {
     async signIn({ user }) {
@@ -29,6 +33,10 @@ export const authOptions: NextAuthOptions = {
       }
 
       return true;
+    },
+
+    async signOut() {
+      redirect("/");
     },
 
     async jwt({ token, user }) {
