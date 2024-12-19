@@ -32,8 +32,6 @@ export default function Home() {
     }
 
     setShowSuccess(true);
-    const fileName = file.name;
-    console.log("File Name:", fileName);
     setTimeout(() => setShowSuccess(false), 3000);
 
     const reader = new FileReader();
@@ -44,7 +42,6 @@ export default function Home() {
       const worksheet = workbook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
       setExcelData(jsonData);
-      console.log("Excel to JSON:", jsonData);
     };
     reader.readAsBinaryString(file);
   };

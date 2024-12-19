@@ -1,3 +1,5 @@
+import axios from "axios";
+
 interface RowType {
   fullname: string;
   contact: string;
@@ -12,11 +14,16 @@ interface SelectedRowType {
   original: RowType;
 }
 
-export const PrintID = (selectedRows) => {
+export const PrintID = async (selectedRows) => {
   if (selectedRows.length === 0) return;
 
   // Extract selected data
   const selectedData = selectedRows.map((row: SelectedRowType) => row.original);
+
+  console.log('Selected Data:', selectedData);
+
+  // Save selected data
+  await axios.post("/api/saveSelectedRows", selectedData);
 
   // Open new tab
   const newTab = window.open("", "_blank");
