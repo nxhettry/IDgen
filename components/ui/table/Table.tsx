@@ -141,6 +141,42 @@ export function DataTableDemo({ data }: { data: ExcelDataType[] }) {
     },
   });
 
+  const handlePrint = () => {
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+
+    if (selectedRows.length === 0) return;
+
+    // Extract selected data
+    const selectedData = selectedRows.map((row) => row.original);
+
+    // Open new tab
+    const newTab = window.open("", "_blank");
+
+    if (newTab) {
+      // Generate ID Card HTML
+      const idCardsHtml = selectedData
+        .map(
+          (row) => `
+        <div style="border: 1px solid black; padding: 16px; margin: 8px; width: 200px;">
+          <h3>${row.fullname}</h3>
+          <p><strong>Contact:</strong> ${row.contact}</p>
+          <p><strong>Email:</strong> ${row.email}</p>
+          <p><strong>Address:</strong> ${row.address}</p>
+          <p><strong>DOB:</strong> ${row.dob}</p>
+          <p><strong>Grade:</strong> ${row.grade}</p>
+          <p><strong>Blood Group:</strong> ${row.bloodGroup}</p>
+        </div>`
+        )
+        .join("");
+
+      // Render content in new tab
+      newTab.document.body.innerHTML = `
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+          ${idCardsHtml}
+        </div>`;
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -236,20 +272,13 @@ export function DataTableDemo({ data }: { data: ExcelDataType[] }) {
         </div>
         <div className="space-x-2">
           <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            variant="default"
+            color="Purple"
+            size="lg"
+            onClick={handlePrint}
+            disabled={!table.getFilteredSelectedRowModel().rows.length}
           >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
+            Print
           </Button>
         </div>
       </div>
