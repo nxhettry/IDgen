@@ -38,6 +38,7 @@ export const authOptions: NextAuthOptions = {
         const dbUser = await User.findOne({ email: user.email });
 
         if (dbUser) {
+          token._id = dbUser._id;
           token.isPremium = dbUser.isPremium;
         }
       }
@@ -48,6 +49,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token && session.user) {
         session.user.isPremium = token.isPremium;
+        session.user._id = token._id;
       }
 
       return session;

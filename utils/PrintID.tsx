@@ -22,7 +22,12 @@ export const PrintID = async (selectedRows, isPremium) => {
   console.log("Premium: ", isPremium);
 
   // Save selected data
-  if (isPremium) await axios.post("/api/saveSelectedRows", selectedData);
+  if (isPremium)
+    await axios.post("/api/saveSelectedRows", selectedData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
   const newTab = window.open("", "_blank");
 
