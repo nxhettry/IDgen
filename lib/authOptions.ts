@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { User } from "@/models/UserSchema";
+import User from "@/models/UserSchema";
 import { connectDB } from "./db";
 
 export const authOptions: NextAuthOptions = {
@@ -39,7 +39,6 @@ export const authOptions: NextAuthOptions = {
 
         if (dbUser) {
           token.isPremium = dbUser.isPremium;
-          token.tokenExpiry = 1200 * 60 * 1.5;
         }
       }
 
@@ -49,7 +48,6 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token && session.user) {
         session.user.isPremium = token.isPremium;
-        session.user.expiryDate = token.expiryDate;
       }
 
       return session;

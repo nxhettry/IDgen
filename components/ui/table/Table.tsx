@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSession } from "next-auth/react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -141,11 +142,15 @@ export function DataTableDemo({ data }: { data: ExcelDataType[] }) {
       rowSelection,
     },
   });
-
+  const { data: session } = useSession();
   const selectedRows = table?.getFilteredSelectedRowModel()?.rows;
 
   const handlePrint = () => {
-    PrintID(selectedRows);
+    if (!session || !session.user) {
+      return;
+    }
+
+    PrintID(selectedRows, session.user.isPremium);
   };
 
   return (

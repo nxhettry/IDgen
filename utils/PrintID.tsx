@@ -14,22 +14,19 @@ interface SelectedRowType {
   original: RowType;
 }
 
-export const PrintID = async (selectedRows) => {
+export const PrintID = async (selectedRows, isPremium) => {
   if (selectedRows.length === 0) return;
 
-  // Extract selected data
   const selectedData = selectedRows.map((row: SelectedRowType) => row.original);
 
-  console.log('Selected Data:', selectedData);
+  console.log("Premium: ", isPremium);
 
   // Save selected data
-  await axios.post("/api/saveSelectedRows", selectedData);
+  if (isPremium) await axios.post("/api/saveSelectedRows", selectedData);
 
-  // Open new tab
   const newTab = window.open("", "_blank");
 
   if (newTab) {
-    // Generate ID Card HTML
     const idCardsHtml = selectedData
       .map(
         (row: RowType) => `
@@ -45,7 +42,6 @@ export const PrintID = async (selectedRows) => {
       )
       .join("");
 
-    // Render content in new tab
     newTab.document.body.innerHTML = `
         <div style="display: flex; flex-wrap: wrap; justify-content: center;">
           ${idCardsHtml}
