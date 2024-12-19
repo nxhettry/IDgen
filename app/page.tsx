@@ -1,18 +1,16 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { IoMdClose } from "react-icons/io";
+import * as XLSX from "xlsx";
+import { DataTableDemo, ExcelDataType } from "@/components/ui/table/Table";
 
 export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<{
-    name: string;
-    size: number;
-  } | null>(null);
+  const [excelData, setExcelData] = useState<ExcelDataType[]>();
   const { data: session } = useSession();
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleButtonClick = () => {
     // Check if user is logged in
@@ -21,22 +19,34 @@ export default function Home() {
       return;
     }
 
-    // Trigger file input dialog
-    fileInputRef.current?.click();
+    // Simulate a Click on the button to trigger file upload
+    const fileInput = document.querySelector(".fileInput") as HTMLInputElement;
+    fileInput?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      alert("File uploaded successfully");
-      setShowSuccess(true);
-      setSelectedFile({
-        name: file.name,
-        size: file.size,
-      });
-
-      console.log(file);
+    if (!file) {
+      alert("Please select a file.");
+      return;
     }
+
+    setShowSuccess(true);
+    const fileName = file.name;
+    console.log("File Name:", fileName);
+    setTimeout(() => setShowSuccess(false), 3000);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const binaryStr = event.target?.result;
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      setExcelData(jsonData);
+      console.log("Excel to JSON:", jsonData);
+    };
+    reader.readAsBinaryString(file);
   };
 
   return (
@@ -53,10 +63,9 @@ export default function Home() {
           <span className="sr-only text-white">Choose Excel file</span>
           <input
             type="file"
-            ref={fileInputRef}
-            className="hidden"
+            className="hidden fileInput"
             accept=".xlsx, .xls"
-            onChange={handleFileChange}
+            onChange={handleFileUpload}
           />
           <div
             className="mt-1 flex justify-center items-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md cursor-pointer hover:border-indigo-500 transition-colors"
@@ -80,10 +89,9 @@ export default function Home() {
       </div>
 
       {showSuccess && (
-        <div className="mt-4 p-4 bg-green-100 rounded-md">
+        <div className="fixed top-0 right-12 mt-4 p-4 bg-green-100 rounded-md">
           <p className="text-green-700 text-center">
-            File uploaded successfully:{" "}
-            {selectedFile?.name ? selectedFile.name : "sample.xlsx"}
+            File uploaded successfully: uploaded.xlsx
           </p>
         </div>
       )}
@@ -131,6 +139,12 @@ export default function Home() {
               </p>
             </div>
           </div>
+        </div>
+      )}
+
+      {excelData && (
+        <div className="h-full w-4/5 mx-auto mt-8 bg-gray-50 rounded-xl p-3 text-black">
+          <DataTableDemo data={excelData} />
         </div>
       )}
     </div>
