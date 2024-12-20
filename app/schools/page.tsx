@@ -2,6 +2,7 @@ import axios from "axios";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { DataTableDemo } from "@/components/ui/table/Table";
+import SchoolCard from "@/components/ui/card/SchoolCard";
 
 export default async function Schools() {
   const session = await getServerSession(authOptions);
@@ -33,9 +34,11 @@ export default async function Schools() {
     <div className="h-full w-4/5 flex flex-col overflow-y-scroll justify-center items-center space-y-8 mx-auto rounded-xl p-3 text-black">
       {data.message.map((item, index) => {
         return (
-          <div key={index} className="bg-gray-50 rounded-xl p-3 w-full">
-            <DataTableDemo data={item.data} />
-          </div>
+          <SchoolCard key={index} text={`School ${index + 1}`} />
+
+          // <div key={index} className="bg-gray-50 rounded-xl p-3 w-full">
+          //   <DataTableDemo data={item.data} />
+          // </div>
         );
       })}
     </div>

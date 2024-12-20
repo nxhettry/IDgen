@@ -19,8 +19,6 @@ export const PrintID = async (selectedRows, isPremium) => {
 
   const selectedData = selectedRows.map((row: SelectedRowType) => row.original);
 
-  console.log("Premium: ", isPremium);
-
   // Save selected data
   if (isPremium)
     await axios.post("/api/saveSelectedRows", selectedData, {
