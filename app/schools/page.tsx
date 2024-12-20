@@ -34,7 +34,7 @@ export default async function Schools() {
     <div className="h-full w-4/5 flex flex-col overflow-y-scroll justify-center items-center space-y-8 mx-auto rounded-xl p-3 text-black">
       {data.message.map((item, index) => {
         return (
-          <SchoolCard key={index} text={`School ${index + 1}`} />
+          <SchoolCard key={index} idx={index} />
 
           // <div key={index} className="bg-gray-50 rounded-xl p-3 w-full">
           //   <DataTableDemo data={item.data} />

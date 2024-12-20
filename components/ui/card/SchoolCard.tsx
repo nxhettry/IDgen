@@ -1,11 +1,12 @@
 "use client";
+import Link from "next/link";
 import React, { useState } from "react";
-import { ExcelDataType } from "../table/Table";
 
-const SchoolCard = ({ text, data }: { text: string; data: ExcelDataType[] }) => {
+const SchoolCard = ({ idx }: { idx: number }) => {
   const [isCardHovered, setIsCardHovered] = useState(false);
   return (
-    <div
+    <Link
+      href={`/schools/${idx}`}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => setIsCardHovered(false)}
       className={`h-28 w-64 rounded-xl z-20 ${
@@ -17,9 +18,9 @@ const SchoolCard = ({ text, data }: { text: string; data: ExcelDataType[] }) => 
           isCardHovered && "hover:-translate-x-2 hover:-translate-y-2"
         } bg-white rounded-xl  h-full w-full text-black flex justify-center items-center`}
       >
-        {text}
+        School {idx + 1}
       </div>
-    </div>
+    </Link>
   );
 };
 
