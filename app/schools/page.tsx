@@ -37,6 +37,7 @@ export default async function Schools() {
           <SchoolCard
             key={index}
             date={new Date(data.message[0].createdAt).toLocaleDateString()}
+            sheetName={item.sheetName}
             idx={index}
           />
         );
