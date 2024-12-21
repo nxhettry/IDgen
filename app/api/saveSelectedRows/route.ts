@@ -13,13 +13,30 @@ export async function POST(req: Request) {
   if (!session) {
     return NextResponse.json({ status: 401, message: "Unauthorized !" });
   }
+
   try {
     const { _id, isPremium } = session.user;
 
+    // Only allowing premium users to save data
     if (!isPremium) {
       return NextResponse.json({
         status: 403,
         message: "You need to be a premium user to save data",
+      });
+    }
+
+    // Checking if the same sheetName already exists for the user
+    const existingData = await Data.findOne({ userId: _id, sheetName: title });
+
+    console.log(
+      `${existingData ? "Data already exists" : "Data does not exist"}`
+    );
+
+    if (existingData) {
+      return NextResponse.json({
+        status: 400,
+        message:
+          "Data already exists, Either update the existing data or use a different sheet name",
       });
     }
 
