@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 
 export async function POST(req: Request) {
   const body = await req.json();
+  const { title, selectedData } = body;
+
   const session = await getServerSession(authOptions);
 
   if (!session) {
@@ -25,7 +27,8 @@ export async function POST(req: Request) {
 
     const data = new Data({
       userId,
-      data: body,
+      data: selectedData,
+      sheetName: title,
     });
 
     await data.save();

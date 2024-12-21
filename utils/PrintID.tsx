@@ -1,3 +1,4 @@
+"use client";
 import axios from "axios";
 
 interface RowType {
@@ -14,18 +15,25 @@ interface SelectedRowType {
   original: RowType;
 }
 
-export const PrintID = async (selectedRows, isPremium) => {
+export const PrintID = async (title, selectedRows, isPremium) => {
   if (selectedRows.length === 0) return;
 
   const selectedData = selectedRows.map((row: SelectedRowType) => row.original);
 
+  const dataToPost = {
+    title, //For school name
+    selectedData, //For the actual data
+  };
+
   // Save selected data
-  if (isPremium)
-    await axios.post("/api/saveSelectedRows", selectedData, {
+  if (isPremium) {
+    const bhado = await axios.post("/api/saveSelectedRows", dataToPost, {
       headers: {
         "Content-Type": "application/json",
       },
     });
+    console.log(bhado.data.message);
+  }
 
   const newTab = window.open("", "_blank");
 

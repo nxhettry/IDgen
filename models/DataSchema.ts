@@ -1,14 +1,16 @@
-import mongoose, { Schema, Document, Model, SchemaType } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 import { ExcelDataType } from "@/components/ui/table/Table";
 
 export interface IData extends Document {
   userId: mongoose.Schema.Types.ObjectId;
+  sheetName: string;
   data: ExcelDataType[];
   createdAt: Date;
 }
 
 const DataSchema: Schema = new Schema<IData>({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  sheetName: { type: String, required: true },
   data: { type: Schema.Types.Mixed, required: true },
   createdAt: { type: Date, default: Date.now },
 });

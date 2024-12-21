@@ -5,10 +5,12 @@ import { FcGoogle } from "react-icons/fc";
 import { IoMdClose } from "react-icons/io";
 import * as XLSX from "xlsx";
 import { DataTableDemo, ExcelDataType } from "@/components/ui/table/Table";
+import { set } from "mongoose";
 
 export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [title, setTitle] = useState<string>("Schoolname");
   const [excelData, setExcelData] = useState<ExcelDataType[]>();
   const { data: session } = useSession();
 
@@ -39,6 +41,7 @@ export default function Home() {
       const binaryStr = event.target?.result;
       const workbook = XLSX.read(binaryStr, { type: "binary" });
       const sheetName = workbook.SheetNames[0];
+      setTitle(sheetName);
       const worksheet = workbook.Sheets[sheetName];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
       setExcelData(jsonData);
@@ -141,7 +144,7 @@ export default function Home() {
 
       {excelData && (
         <div className="h-full w-4/5 mx-auto mt-8 bg-gray-50 rounded-xl p-3 text-black">
-          <DataTableDemo data={excelData} />
+          <DataTableDemo title={title} data={excelData} />
         </div>
       )}
     </div>

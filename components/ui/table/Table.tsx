@@ -112,7 +112,7 @@ export const columns: ColumnDef<ExcelDataType>[] = [
   },
 ];
 
-export function DataTableDemo({ data }: { data: ExcelDataType[] }) {
+export function DataTableDemo({ data, title }: { data: ExcelDataType[], title: string }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -147,7 +147,7 @@ export function DataTableDemo({ data }: { data: ExcelDataType[] }) {
       return;
     }
 
-    PrintID(selectedRows, session.user.isPremium);
+    PrintID(title, selectedRows, session.user.isPremium);
   };
 
   return (
