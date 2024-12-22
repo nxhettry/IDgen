@@ -10,7 +10,6 @@ export default function Addnew() {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [fileData, setFileData] = useState<ExcelDataType[] | []>([]);
   const [showError, setShowError] = useState<boolean>(false);
-  const [showLoginPopup, setShowLoginPopup] = useState<boolean>(false);
   const [schoolName, setSchoolName] = useState<string | "">("");
   const { data: session } = useSession();
 
