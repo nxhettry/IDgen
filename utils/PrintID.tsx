@@ -27,12 +27,11 @@ export const PrintID = async (title, selectedRows, isPremium) => {
 
   // Save selected data
   if (isPremium) {
-    const bhado = await axios.post("/api/saveSelectedRows", dataToPost, {
+    await axios.post("/api/saveSelectedRows", dataToPost, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log(bhado.data.message);
   }
 
   const newTab = window.open("", "_blank");
