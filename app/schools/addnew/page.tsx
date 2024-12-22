@@ -10,6 +10,7 @@ export default function Addnew() {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [fileData, setFileData] = useState<ExcelDataType[] | []>([]);
   const [showError, setShowError] = useState<boolean>(false);
+  const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
   const [schoolName, setSchoolName] = useState<string | "">("");
   const { data: session } = useSession();
 
@@ -33,9 +34,12 @@ export default function Addnew() {
           "Content-Type": "application/json",
         },
       });
+
+      setShowUploadSuccess(true);
     } catch (error) {
       console.log(error);
     }
+
     clearForm();
   };
 
@@ -47,6 +51,7 @@ export default function Addnew() {
 
     setTimeout(() => {
       setShowSuccess(false);
+      setShowUploadSuccess(false);
     }, 3000);
   };
 
@@ -161,6 +166,12 @@ export default function Addnew() {
           <p className="text-green-700 text-center">
             File uploaded successfully: uploaded.xlsx
           </p>
+        </div>
+      )}
+
+      {showUploadSuccess && (
+        <div className="fixed top-0 right-12 mt-4 p-4 bg-green-100 rounded-md">
+          <p className="text-green-700 text-center">Data saved successfully</p>
         </div>
       )}
     </div>
