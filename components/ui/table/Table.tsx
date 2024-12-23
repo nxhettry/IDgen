@@ -137,6 +137,10 @@ export function DataTableDemo({ data, title }: { data: ExcelDataType[], title: s
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: {
+        pageIndex: 0,
+        pageSize: data.length,
+      },
     },
   });
   const { data: session } = useSession();

@@ -1,7 +1,6 @@
 import axios from "axios";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
-import { DataTableDemo } from "@/components/ui/table/Table";
 import SchoolCard from "@/components/ui/card/SchoolCard";
 
 export default async function Schools() {
