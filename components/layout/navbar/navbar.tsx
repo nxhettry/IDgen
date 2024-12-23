@@ -4,6 +4,7 @@ import { HoveredLink, Menu, MenuItem } from "@/components/ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Navbar({ className }: { className?: string }) {
   const { data: session } = useSession();
@@ -14,6 +15,7 @@ export default function Navbar({ className }: { className?: string }) {
       className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}
     >
       <Menu setActive={setActive}>
+        <Link href="/">Home</Link>
         <MenuItem setActive={setActive} active={active} item="School">
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/schools">View All</HoveredLink>
@@ -25,30 +27,28 @@ export default function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/students">View All</HoveredLink>
           </div>
         </MenuItem>
-        <MenuItem setActive={setActive} active={active} item="Profile">
-          <div className="flex flex-col space-y-4 text-sm">
-            {session ? (
-              <>
-                <HoveredLink href="/profile">Set Up</HoveredLink>
-
-                <HoveredLink href="#">
-                  <Button
-                    onClick={() => signOut()}
-                    className="w-16 bg-red-500 text-sm"
-                  >
-                    Sign Out
-                  </Button>
-                </HoveredLink>
-              </>
-            ) : (
+        {session ? (
+          <MenuItem
+            setActive={setActive}
+            active={active}
+            item={`${session.user?.name?.split(" ")[0]}`}
+          >
+            <div className="flex flex-col space-y-4 text-sm">
               <HoveredLink href="#">
-                <button onClick={() => signIn("google")}>Sign In</button>
+                <Button
+                  onClick={() => signOut()}
+                  className="w-16 bg-red-500 text-sm"
+                >
+                  Sign Out
+                </Button>
               </HoveredLink>
-            )}
-          </div>
-        </MenuItem>
-
-        {session && <p>Welcome {session.user?.name?.split(" ")}</p>}
+            </div>
+          </MenuItem>
+        ) : (
+          <HoveredLink href="#">
+            <button onClick={() => signIn("google")}>Sign In</button>
+          </HoveredLink>
+        )}
       </Menu>
     </div>
   );
