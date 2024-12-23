@@ -10,7 +10,7 @@ export default function Addnew() {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [fileData, setFileData] = useState<ExcelDataType[] | []>([]);
   const [showError, setShowError] = useState<boolean>(false);
-  const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const [schoolName, setSchoolName] = useState<string | "">("");
   const { data: session } = useSession();
 
@@ -51,7 +51,7 @@ export default function Addnew() {
 
     setTimeout(() => {
       setShowSuccess(false);
-      setShowUploadSuccess(false);
+      setFileData([]);
     }, 3000);
   };
 
@@ -73,17 +73,26 @@ export default function Addnew() {
       return;
     }
 
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+    setLoading(true);
+    setShowSuccess(false);
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const binaryStr = event.target?.result;
-      const workbook = XLSX.read(binaryStr, { type: "binary" });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet);
-      setFileData(jsonData);
+      try {
+        const binaryStr = event.target?.result;
+        const workbook = XLSX.read(binaryStr, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        setFileData(jsonData);
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } catch (error) {
+        alert("Error reading file. Please try again.");
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     };
     reader.readAsBinaryString(file);
   };
@@ -118,7 +127,7 @@ export default function Addnew() {
                   type="button"
                   className="relative bg-black font-medium text-white rounded-md px-8 py-2 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                 >
-                  Select File
+                  {loading ? "Uploading..." : "Upload Excel file"}
                 </button>
               </div>
               <p className="text-xs text-black">Supported formats: XLSX, XLS</p>
@@ -166,12 +175,6 @@ export default function Addnew() {
           <p className="text-green-700 text-center">
             File uploaded successfully: uploaded.xlsx
           </p>
-        </div>
-      )}
-
-      {showUploadSuccess && (
-        <div className="fixed top-0 right-12 mt-4 p-4 bg-green-100 rounded-md">
-          <p className="text-green-700 text-center">Data saved successfully</p>
         </div>
       )}
     </div>
