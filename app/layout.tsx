@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className="antialiased flex-col flex w-screen h-screen">
         <SessionWrapper>
           <BackgroundProvider>
-            <div className="h-16 w-full">
+            <div className="h-16 w-screen max-w-screen">
               <Navbar />
             </div>
             {children}

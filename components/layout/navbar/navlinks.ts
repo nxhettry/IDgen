@@ -6,6 +6,10 @@ export interface NavlinksType {
 
 export const Navlinks: NavlinksType[] = [
   {
+    heading: "Home",
+    link: "/",
+  },
+  {
     heading: "School",
     subheading: [
       { name: "View All", link: "/schools" },
@@ -15,9 +19,5 @@ export const Navlinks: NavlinksType[] = [
   {
     heading: "Students",
     link: "/students",
-  },
-  {
-    heading: "Profile",
-    link: "/profile",
   },
 ];

@@ -2,16 +2,7 @@ import Data from "@/models/DataSchema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { DataTableDemo } from "@/components/ui/table/Table";
-
-interface SessionType {
-  user: {
-    name: string;
-    email: string;
-    image: string;
-    isPremium: boolean;
-    _id: string;
-  };
-}
+import { SessionType } from "@/types/SessionType";
 
 export default async function Students() {
   const session: SessionType | null = await getServerSession(authOptions);

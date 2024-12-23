@@ -2,9 +2,10 @@ import axios from "axios";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import SchoolCard from "@/components/ui/card/SchoolCard";
+import { SessionType } from "@/types/SessionType";
 
 export default async function Schools() {
-  const session = await getServerSession(authOptions);
+  const session: SessionType | null = await getServerSession(authOptions);
   if (!session || !session.user.isPremium) {
     return (
       <div className="h-full w-full flex justify-center items-center text-white text-3xl">
@@ -30,7 +31,7 @@ export default async function Schools() {
   }
 
   return (
-    <div className="h-full w-4/5 flex flex-wrap overflow-y-scroll justify-around items-center mx-auto rounded-xl p-3 text-black">
+    <div className="h-full w-4/5 flex flex-wrap overflow-y-scroll no-scrollbar justify-around items-center mx-auto rounded-xl p-3 text-black">
       {data.message.map((item, index) => {
         return (
           <SchoolCard
