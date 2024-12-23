@@ -35,7 +35,7 @@ export default function Addnew() {
         },
       });
 
-      setShowUploadSuccess(true);
+      setShowSuccess(true);
     } catch (error) {
       console.log(error);
     }
