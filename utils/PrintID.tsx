@@ -15,7 +15,13 @@ interface SelectedRowType {
   original: RowType;
 }
 
-export const PrintID = async (title, selectedRows, isPremium) => {
+export const PrintID = (
+  title: string,
+  selectedRows: SelectedRowType[],
+  isPremium: boolean,
+  router: any
+) => {
+
   if (selectedRows.length === 0) return;
 
   const selectedData = selectedRows.map((row: SelectedRowType) => row.original);
@@ -27,34 +33,20 @@ export const PrintID = async (title, selectedRows, isPremium) => {
 
   // Save selected data
   if (isPremium) {
-    await axios.post("/api/saveSelectedRows", dataToPost, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const saveData = async () => {
+      await axios.post("/api/saveSelectedRows", dataToPost, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    };
+
+    saveData();
   }
 
-  const newTab = window.open("", "_blank");
+  const url = new URL("/id-preview", window.location.origin);
+  url.searchParams.append("title", title);
+  url.searchParams.append("data", JSON.stringify(selectedData));
 
-  if (newTab) {
-    const idCardsHtml = selectedData
-      .map(
-        (row: RowType) => `
-        <div style="border: 1px solid black; padding: 16px; margin: 8px; width: 200px;">
-          <h3>${row.fullname}</h3>
-          <p><strong>Contact:</strong> ${row.contact}</p>
-          <p><strong>Email:</strong> ${row.email}</p>
-          <p><strong>Address:</strong> ${row.address}</p>
-          <p><strong>DOB:</strong> ${row.dob}</p>
-          <p><strong>Grade:</strong> ${row.grade}</p>
-          <p><strong>Blood Group:</strong> ${row.bloodGroup}</p>
-        </div>`
-      )
-      .join("");
-
-    newTab.document.body.innerHTML = `
-        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-          ${idCardsHtml}
-        </div>`;
-  }
+  router.push(url.toString());
 };

@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useSession } from "next-auth/react";
 import {
@@ -113,6 +113,7 @@ export const columns: ColumnDef<ExcelDataType>[] = [
 ];
 
 export function DataTableDemo({ data, title }: { data: ExcelDataType[], title: string }) {
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -151,7 +152,7 @@ export function DataTableDemo({ data, title }: { data: ExcelDataType[], title: s
       return;
     }
 
-    PrintID(title, selectedRows, session.user.isPremium);
+    PrintID(title, selectedRows, session.user.isPremium, router);
   };
 
   return (
