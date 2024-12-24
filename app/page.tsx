@@ -5,7 +5,6 @@ import { FcGoogle } from "react-icons/fc";
 import { IoMdClose } from "react-icons/io";
 import * as XLSX from "xlsx";
 import { DataTableDemo, ExcelDataType } from "@/components/ui/table/Table";
-import { set } from "mongoose";
 
 export default function Home() {
   const [showSuccess, setShowSuccess] = useState(false);
