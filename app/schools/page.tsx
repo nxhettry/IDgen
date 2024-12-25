@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import SchoolCard from "@/components/ui/card/SchoolCard";
 import { SessionType } from "@/types/SessionType";
-import Link from "next/link";
+import Popup from "@/components/pages/school/Popup";
 
 export default async function Schools() {
   const session: SessionType | null = await getServerSession(authOptions);
@@ -50,16 +50,9 @@ export default async function Schools() {
               );
             }
           )}
-        <Link
-          href={`/schools/addnew`}
-          className={`h-40 w-64 rounded-xl z-20 text-white flex flex-col gap-4 justify-center items-center`}
-        >
-          <div
-            className={`bg-green-300 rounded-xl hover:scale-110 transition ease-in-out duration-200 text-center font-bold h-full w-full text-black flex justify-center items-center`}
-          >
-            <p className="text-2xl">Add New School</p>
-          </div>
-        </Link>
+        <div className="z-30">
+          <Popup />
+        </div>
       </div>
     </div>
   );

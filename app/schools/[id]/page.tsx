@@ -1,3 +1,4 @@
+
 const Classes = async ({ params }: { params: { id: number } }) => {
   const { id } = await params;
 
