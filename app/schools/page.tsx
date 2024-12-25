@@ -55,7 +55,7 @@ export default async function Schools() {
           className={`h-40 w-64 rounded-xl z-20 text-white flex flex-col gap-4 justify-center items-center`}
         >
           <div
-            className={` bg-white rounded-xl hover:scale-110 transition ease-in-out duration-200 text-center font-bold h-full w-full text-black flex justify-center items-center`}
+            className={`bg-green-300 rounded-xl hover:scale-110 transition ease-in-out duration-200 text-center font-bold h-full w-full text-black flex justify-center items-center`}
           >
             <p className="text-2xl">Add New School</p>
           </div>
