@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { ExcelDataType } from "@/components/ui/table/Table";
+import { useRouter } from "next/navigation";
 
 export default function Addnew() {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
@@ -12,7 +13,9 @@ export default function Addnew() {
   const [showError, setShowError] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [schoolName, setSchoolName] = useState<string | "">("");
+
   const { data: session } = useSession();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +39,9 @@ export default function Addnew() {
       });
 
       setShowSuccess(true);
+      setTimeout(() => {
+        router.push("/schools");
+      }, 1000);
     } catch (error) {
       console.log(error);
     }
