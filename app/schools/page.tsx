@@ -32,33 +32,35 @@ export default async function Schools() {
   }
 
   return (
-    <div className="h-full w-4/5 flex flex-wrap overflow-y-scroll no-scrollbar justify-around items-center mx-auto rounded-xl p-3 text-black">
-      {data.message.length > 0 ? (
-        data.message.map(
-          (item: { sheetName: string; createdAt: string }, index: number) => {
-            return (
-              <SchoolCard
-                key={index}
-                date={new Date(data.message[0].createdAt).toLocaleDateString()}
-                sheetName={item.sheetName}
-                idx={index}
-              />
-            );
-          }
-        )
-      ) : (
+    <div className="flex flex-col justify-center items-center mt-24 gap-12">
+      <h1 className="text-2xl font-bold underline text-white">Schools</h1>
+      <div className="h-full w-4/5 flex gap-4 flex-wrap overflow-y-scroll no-scrollbar justify-center items-start mx-auto rounded-xl p-3 text-black">
+        {data.message.length > 0 &&
+          data.message.map(
+            (item: { sheetName: string; createdAt: string }, index: number) => {
+              return (
+                <SchoolCard
+                  key={index}
+                  date={new Date(
+                    data.message[0].createdAt
+                  ).toLocaleDateString()}
+                  sheetName={item.sheetName}
+                  idx={index}
+                />
+              );
+            }
+          )}
         <Link
           href={`/schools/addnew`}
           className={`h-40 w-64 rounded-xl z-20 text-white flex flex-col gap-4 justify-center items-center`}
         >
-          <p className="text-xl font-bold">No data Found !</p>
           <div
             className={` bg-white rounded-xl hover:scale-110 transition ease-in-out duration-200 text-center font-bold h-full w-full text-black flex justify-center items-center`}
           >
             <p className="text-2xl">Add New School</p>
           </div>
         </Link>
-      )}
+      </div>
     </div>
   );
 }
