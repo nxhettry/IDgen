@@ -1,11 +1,16 @@
 import axios from "axios";
-import React from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { DataTableDemo } from "@/components/ui/table/Table";
 
-const page = async ({ params }: { params: { id: number } }) => {
-  const { id } = await params;
+const page = async ({ params }: { params: { className: string, name: string } }) => {
+  const { className, name } = await params;
+
+  return <div className="flex text-white font-bold text-3xl">
+    hello {decodeURIComponent(name)} {decodeURIComponent(className)}
+  </div>
+
+
   const session = await getServerSession(authOptions);
   let data;
   if (!session || !session.user.isPremium) {
@@ -19,8 +24,8 @@ const page = async ({ params }: { params: { id: number } }) => {
   try {
     const res = await axios.get(`${process.env.NEXTAUTH_URL}/api/school`, {
       params: {
-        idx: id,
-        _id: session.user._id,
+        classNamex: className,
+        _className: session.user._className,
       },
     });
 

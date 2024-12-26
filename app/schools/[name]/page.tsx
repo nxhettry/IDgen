@@ -28,27 +28,28 @@ const Class = async ({ params }: { params: { name: string } }) => {
         },
       }
     );
-    classes = res.data;
+    classes = res.data.data;
   } catch (error) {
     console.log(error);
   }
 
   return (
-    <div className="flex flex-col justify-center items-center mt-24 gap-12">
-      <h1 className="text-2xl font-bold underline text-white">Classes</h1>
-      {classes.length > 0 &&
-        classes.map((item: any, index: number) => {
-          return (
-            <ClassCard
-              key={index}
-              schoolName={name}
-              className={item.className}
-              date={new Date(item.message[0].createdAt).toLocaleDateString()}
-            />
-          );
-        })}
-      <div className="z-30">
-        <Popup schoolName={name} />
+    <div className="flex flex-col mt-24 gap-8">
+      <h1 className="text-2xl w-full text-center font-bold underline text-white">Classes</h1>
+      <div className="flex justify-center items-center  gap-12">
+        {classes.length > 0 &&
+          classes.map((item: any, index: number) => {
+            return (
+              <ClassCard
+                key={index}
+                schoolName={name}
+                className={item.className}
+              />
+            );
+          })}
+        <div className="z-30">
+          <Popup schoolName={name} />
+        </div>
       </div>
     </div>
   );
