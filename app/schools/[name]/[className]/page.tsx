@@ -1,48 +1,42 @@
 import axios from "axios";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
-import { DataTableDemo } from "@/components/ui/table/Table";
+import { SessionType } from "@/types/SessionType";
 
-const page = async ({ params }: { params: { className: string, name: string } }) => {
-  const { className, name } = await params;
+interface ParamsProps {
+  params: { name: string; className: string };
+}
 
-  return <div className="flex text-white font-bold text-3xl">
-    hello {decodeURIComponent(name)} {decodeURIComponent(className)}
-  </div>
+export default async function DataPage({ params }: ParamsProps) {
+  const { name, className } = await params;
 
+  const session: SessionType | null = await getServerSession(authOptions);
 
-  const session = await getServerSession(authOptions);
-  let data;
   if (!session || !session.user.isPremium) {
-    return (
-      <div className="h-full w-full flex justify-center items-center text-white text-3xl">
-        You need to be a premium user to view this page
-      </div>
-    );
+    return;
+    <div className="mt-24 flex flex-col justify-center items-center">
+      You need to be logged in to view this page
+    </div>;
   }
 
+  // Fetching student data
   try {
-    const res = await axios.get(`${process.env.NEXTAUTH_URL}/api/school`, {
-      params: {
-        classNamex: className,
-        _className: session.user._className,
+    const res = await axios.get(`/api/schools/${name}/${className}`, {
+      headers: {
+        "X-userId": session.user._id,
       },
     });
 
-    data = res.data.message.data;
+    console.log(res.data);
   } catch (error) {
     console.log(error);
   }
-  return (
-    <div className="text-3xl font-bold text-white flex justify-center items-center h-full">
-      {!data ? "No data found" : 
-      <div className="w-4/5 mx-auto rounded-xl p-3 text-black bg-gray-50">
 
-      <DataTableDemo data={data} />
-      </div>
-      }
+  return (
+    <div>
+      <h1 className="text-white text-2xl">
+        {decodeURIComponent(name)} {decodeURIComponent(className)}
+      </h1>
     </div>
   );
-};
-
-export default page;
+}
