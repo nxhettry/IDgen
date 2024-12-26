@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Data from "@/models/DataSchema";
-import { url } from "node:inspector";
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-
-  const _id = searchParams.get("_id");
+  const _id = req.headers.get("X-userId");
 
   try {
     if (!_id) {

@@ -17,12 +17,8 @@ export default function Navbar({ className }: { className?: string }) {
       <Menu setActive={setActive}>
         <Link href="/">Home</Link>
         <Link href="/schools">School</Link>
-        
-        <MenuItem setActive={setActive} active={active} item="Students">
-          <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="/students">View All</HoveredLink>
-          </div>
-        </MenuItem>
+        <Link href="/upload">Upload</Link>
+
         {session ? (
           <MenuItem
             setActive={setActive}

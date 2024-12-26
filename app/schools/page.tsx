@@ -16,11 +16,14 @@ export default async function Schools() {
   }
   const { _id } = session.user;
 
-  const res = await axios.get(`${process.env.NEXTAUTH_URL}/api/school/getall`, {
-    params: {
-      _id,
-    },
-  });
+  const res = await axios.get(
+    `${process.env.NEXTAUTH_URL}/api/school/getall`,
+    {
+      headers: {
+        "X-userId": _id,
+      }
+    }
+  );
   const data = await res.data;
 
   if (data.status !== 200) {

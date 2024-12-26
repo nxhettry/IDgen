@@ -12,7 +12,7 @@ export default async function DataPage({ params }: ParamsProps) {
   const { name, className } = await params;
 
   const session: SessionType | null = await getServerSession(authOptions);
-  const students: ExcelDataType[] | [] = [];
+  let students: ExcelDataType[] | [] = [];
 
   if (!session || !session.user.isPremium) {
     return;
@@ -31,8 +31,7 @@ export default async function DataPage({ params }: ParamsProps) {
         },
       }
     );
-
-    console.log(res.data);
+    students = res.data.data;
   } catch (error) {
     console.log(error);
   }

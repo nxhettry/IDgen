@@ -3,12 +3,13 @@ import { authOptions } from "@/lib/authOptions";
 import axios from "axios";
 import ClassCard from "@/components/ui/card/ClassCard";
 import Popup from "@/components/pages/class/Popup";
+import { SessionType } from "@/types/SessionType";
 
 const Class = async ({ params }: { params: { name: string } }) => {
   const { name } = await params;
 
   // Getting the session details
-  const session = await getServerSession(authOptions);
+  const session: SessionType | null = await getServerSession(authOptions);
   let classes = [];
 
   if (!session) {

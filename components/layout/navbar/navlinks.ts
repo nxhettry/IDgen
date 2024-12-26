@@ -14,7 +14,7 @@ export const Navlinks: NavlinksType[] = [
     link: "/schools",
   },
   {
-    heading: "Students",
-    link: "/students",
+    heading: "Upload",
+    link: "/upload",
   },
 ];
