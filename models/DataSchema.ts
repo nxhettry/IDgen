@@ -3,15 +3,23 @@ import { ExcelDataType } from "@/components/ui/table/Table";
 
 export interface IData extends Document {
   userId: mongoose.Schema.Types.ObjectId;
-  sheetName: string;
-  data: ExcelDataType[];
+  schoolName: string;
+  data: {
+    className: string;
+    students: ExcelDataType[];
+  }[];
   createdAt: Date;
 }
 
 const DataSchema: Schema = new Schema<IData>({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  sheetName: { type: String, required: true },
-  data: { type: Schema.Types.Mixed, required: true },
+  schoolName: { type: String, required: true },
+  data: [
+    {
+      className: { type: String, required: true },
+      students: {type: Array, default: []},
+    }
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 

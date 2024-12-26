@@ -6,30 +6,48 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { ExcelDataType } from "@/components/ui/table/Table";
 
-export default function Addnew() {
+export default function UploadForm({
+  schoolNames,
+  classNames,
+}: {
+  schoolNames: string[];
+  classNames: {
+    schoolName: string;
+    classes: string[];
+  }[];
+}) {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [fileData, setFileData] = useState<ExcelDataType[] | []>([]);
   const [showError, setShowError] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [schoolName, setSchoolName] = useState<string | "">("");
+
+  // These are the choices of the user
+  const [schoolName, setSchoolName] = useState<string>("");
+  const [className, setClassName] = useState<string>("");
+
   const { data: session } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fileData || !schoolName) {
+    if (!fileData || schoolName === "" || className === "") {
       setShowError(true);
       clearForm();
       return;
     }
 
-    const dataToPost: { title: string; selectedData: ExcelDataType[] } = {
-      title: schoolName,
-      selectedData: fileData,
+    const dataToPost: {
+      schoolName: string;
+      className: string;
+      data: ExcelDataType[];
+    } = {
+      schoolName,
+      className,
+      data: fileData,
     };
 
     // Send data to server
     try {
-      await axios.post("/api/saveSelectedRows", dataToPost, {
+      await axios.post("/api/uploadSheet", dataToPost, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -44,14 +62,15 @@ export default function Addnew() {
   };
 
   const clearForm = () => {
+    setSchoolName("");
+    setFileData([]);
+    
     setTimeout(() => {
       setShowError(false);
-      setSchoolName("");
     }, 3000);
 
     setTimeout(() => {
       setShowSuccess(false);
-      setFileData([]);
     }, 3000);
   };
 
@@ -84,7 +103,7 @@ export default function Addnew() {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        setFileData(jsonData);
+        setFileData(jsonData as ExcelDataType[]);
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
       } catch (error) {
@@ -107,6 +126,80 @@ export default function Addnew() {
 
   return (
     <div className="border border-white bg-white p-6 z-30 rounded-lg mt-32 w-2/5 mx-auto flex flex-col gap-6 justify-center items-center">
+      {showSuccess && (
+        <div className="fixed top-4 right-4 text-green-800 font-regular bg-white rounded-xl flex justify-center items-center h-12 w-[20rem]">
+          Data Saved Successfully
+        </div>
+      )}
+
+      <div className="w-4/5 mx-auto flex flex-col justify-center items-start gap-3">
+        {/* School Dropdown */}
+        <label
+          htmlFor="SchoolSelect"
+          className="relative w-full block p-2 rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+        >
+          <select
+            id="SchoolSelect"
+            value={schoolName}
+            onChange={(e) => setSchoolName(e.target.value)}
+            className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 w-full"
+            required
+          >
+            <option value="" disabled>
+              Select School
+            </option>
+            {schoolNames.map((school, index) => (
+              <option key={index} value={school}>
+                {school}
+              </option>
+            ))}
+          </select>
+
+          <span className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
+            Schoolname
+          </span>
+        </label>
+        {showError && (
+          <p className="text-red-500 text-sm">This field is required</p>
+        )}
+
+        {/* Class Dropdown */}
+        <label
+          htmlFor="ClassSelect"
+          className="relative w-full block p-2 rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+        >
+          <select
+            id="ClassSelect"
+            value={className}
+            onChange={(e) => setClassName(e.target.value)}
+            className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 w-full"
+            required
+          >
+            <option value="" disabled>
+              Select Class
+            </option>
+            {classNames
+              .find((school) => school.schoolName === schoolName)
+              ?.classes.map((classItem, index) => (
+                <option key={index} value={classItem}>
+                  {classItem}
+                </option>
+              )) || (
+              <option value="" disabled>
+                No classes available
+              </option>
+            )}
+          </select>
+
+          <span className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
+            Classname
+          </span>
+        </label>
+        {showError && (
+          <p className="text-red-500 text-sm">This field is required</p>
+        )}
+      </div>
+
       <div className="flex items-center justify-center w-full">
         <label className="block w-4/5">
           <span className="sr-only text-white">Choose Excel file</span>
@@ -139,29 +232,6 @@ export default function Addnew() {
         </label>
       </div>
 
-      <div className="w-4/5 mx-auto flex flex-col justify-center items-start gap-3">
-        <label
-          htmlFor="Schoolname"
-          className="relative w-full block p-2 rounded-md border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
-        >
-          <input
-            type="text"
-            id="Schoolname"
-            value={schoolName}
-            onChange={(e) => setSchoolName(e.target.value)}
-            className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
-            placeholder="Schoolname"
-            required
-          />
-
-          <span className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-700 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
-            Schoolname
-          </span>
-        </label>
-        {showError && (
-          <p className="text-red-500 text-sm">This field is required</p>
-        )}
-      </div>
       <Button
         variant="default"
         className="z-30 font-ubuntu-mono w-full"

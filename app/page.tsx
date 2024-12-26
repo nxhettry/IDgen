@@ -3,49 +3,21 @@ import React, { useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { IoMdClose } from "react-icons/io";
-import * as XLSX from "xlsx";
-import { DataTableDemo, ExcelDataType } from "@/components/ui/table/Table";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [showSuccess, setShowSuccess] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [title, setTitle] = useState<string>("Schoolname");
-  const [excelData, setExcelData] = useState<ExcelDataType[]>();
   const { data: session } = useSession();
+  const router = useRouter();
 
-  const handleButtonClick = () => {
-    // Check if user is logged in
+  const checkAuth = () => {
     if (!session) {
       setShowLoginPopup(true);
       return;
     }
 
-    // Simulate a Click on the button to trigger file upload
-    const fileInput = document.querySelector(".fileInput") as HTMLInputElement;
-    fileInput?.click();
-  };
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      alert("Please select a file.");
-      return;
-    }
-
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const binaryStr = event.target?.result;
-      const workbook = XLSX.read(binaryStr, { type: "binary" });
-      const sheetName = workbook.SheetNames[0];
-      setTitle(sheetName);
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet);
-      setExcelData(jsonData);
-    };
-    reader.readAsBinaryString(file);
+    router.push("/schools");
   };
 
   return (
@@ -57,43 +29,12 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="mt-8 w-4/5 md:3/5 lg:w-2/5 h-1/3">
-        <label className="block">
-          <span className="sr-only text-white">Choose Excel file</span>
-          <input
-            type="file"
-            className="hidden fileInput"
-            accept=".xlsx, .xls"
-            onChange={handleFileUpload}
-          />
-          <div
-            className="mt-1 flex justify-center items-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md cursor-pointer hover:border-indigo-500 transition-colors"
-            onClick={handleButtonClick}
-          >
-            <div className="space-y-1 text-center">
-              <div className="flex justify-center items-center text-sm text-gray-600">
-                <button
-                  type="button"
-                  className="relative bg-indigo-600 font-medium text-white rounded-md px-8 py-2 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Select File
-                </button>
-              </div>
-              <p className="text-xs text-gray-300">
-                Supported formats: XLSX, XLS
-              </p>
-            </div>
-          </div>
-        </label>
-      </div>
-
-      {showSuccess && (
-        <div className="fixed top-0 right-12 mt-4 p-4 bg-green-100 rounded-md">
-          <p className="text-green-700 text-center">
-            File uploaded successfully: uploaded.xlsx
-          </p>
-        </div>
-      )}
+      <Button
+        onClick={checkAuth}
+        className="bg-white text-black h-12 w-32 text-lg font-bold hover:scale-110 transition ease-in-out duration-300 z-30 hover:bg-gray-200"
+      >
+        Get Started
+      </Button>
 
       {/* Login Modal */}
       {showLoginPopup && (
@@ -138,12 +79,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </div>
-      )}
-
-      {excelData && (
-        <div className="h-full w-4/5 mx-auto mt-8 bg-gray-50 rounded-xl p-3 text-black">
-          <DataTableDemo title={title} data={excelData} />
         </div>
       )}
     </div>

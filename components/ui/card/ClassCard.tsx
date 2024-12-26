@@ -2,18 +2,17 @@
 import Link from "next/link";
 import React, { useState } from "react";
 
-const SchoolCard = ({
-  date,
-  schoolName,
-}: {
-  date: string;
+interface ClassCardProps {
   schoolName: string;
-}) => {
-  const [isCardHovered, setIsCardHovered] = useState(false);
+  className: string;
+}
+
+const ClassCard = ({ schoolName, className }: ClassCardProps) => {
+  const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
 
   return (
     <Link
-      href={`/schools/${schoolName}`}
+      href={`/schools/${schoolName}/${className}`}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => setIsCardHovered(false)}
       className={`h-40 w-64 rounded-xl z-20 ${
@@ -26,12 +25,10 @@ const SchoolCard = ({
           "transition-all ease-in-out duration-200 hover:-translate-x-2 hover:-translate-y-2"
         } bg-white rounded-xl text-center font-bold h-full w-full text-black flex justify-center items-center`}
       >
-        {schoolName}
-        <br />
-        {date}
+        {className}
       </div>
     </Link>
   );
 };
 
-export default SchoolCard;
+export default ClassCard;
