@@ -3,11 +3,11 @@ import { connectDB } from "@/lib/db";
 import Data from "@/models/DataSchema";
 
 export async function GET(req: Request) {
-  const schoolIndex = parseInt(req.url.split("/")[5]);
+  const schoolName = decodeURIComponent(req.url.split("/")[5]);
   const _id = req.headers.get("X-userId");
 
-  if (!_id) {
-    console.log("_id not received in the dynamic api route");
+  if (!_id || !schoolName) {
+    console.log("_id  or schoolName not received in the dynamic api route");
     return NextResponse.json({
       status: 404,
       message: "An error occured. Please Try again later",
@@ -16,16 +16,10 @@ export async function GET(req: Request) {
 
   try {
     await connectDB();
-    const allSchools = await Data.find({ userId: _id });
-
-    if (allSchools.length === 0) {
-      return NextResponse.json({
-        status: 404,
-        message: "No Data found",
-      });
-    }
-
-    const school = allSchools[schoolIndex];
+    const school = await Data.findOne({
+      userId: _id,
+      schoolName,
+    });
 
     if (!school) {
       return NextResponse.json({

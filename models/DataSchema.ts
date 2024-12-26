@@ -14,7 +14,12 @@ export interface IData extends Document {
 const DataSchema: Schema = new Schema<IData>({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   schoolName: { type: String, required: true },
-  data: { type: Schema.Types.Mixed },
+  data: [
+    {
+      className: { type: String, required: true },
+      students: {type: Array, default: []},
+    }
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -3,19 +3,19 @@ import Data from "@/models/DataSchema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 
-function getschoolIndex(currentUrl: string) {
+function getschoolName(currentUrl: string) {
   const parts = currentUrl.split("/");
-  return parts[3];
+  return decodeURIComponent(parts[3]);
 }
 
 export async function POST(req: NextRequest) {
   const { className } = await req.json();
-  const schoolIndex = parseInt(getschoolIndex(req.nextUrl.pathname));
+  const schoolName = getschoolName(req.nextUrl.pathname);
 
-  if (!schoolIndex || !className) {
+  if (!schoolName || !className) {
     return NextResponse.json({
       status: 400,
-      message: "IOnvalid school index or class name",
+      message: "Invalid school name or class name",
     });
   }
 
@@ -30,27 +30,26 @@ export async function POST(req: NextRequest) {
     });
   }
 
-
   try {
-    const allSchools = await Data.find({ userId: session.user._id });
+    const school = await Data.findOne({ userId: session.user._id, schoolName });
 
-    const toUpdateSchool = allSchools[schoolIndex];
+    if (!school) {
+      return NextResponse.json({
+        status: 404,
+        message: "School not found",
+      });
+    }
 
-    const classes = toUpdateSchool.data;
-
-    const dataToSave = {
+    school.data.push({
       className,
       students: [],
-    };
+    });
 
-    classes.push(dataToSave);
-    toUpdateSchool.data = classes;
-
-    await toUpdateSchool.save();
+    await school.save();
 
     return NextResponse.json({
       status: 200,
-      message: toUpdateSchool.data,
+      message: "Class Added Successfully",
     });
   } catch (error) {
     console.log(error);
