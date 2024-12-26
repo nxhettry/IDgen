@@ -38,7 +38,7 @@ const Popup = ({ schoolName }: { schoolName: string; }) => {
       if (res.data.status === 200) {
         alert("Class added successfully");
         console.log(res.data);
-        // window.location.reload();
+        window.location.reload();
       } else {
         alert(res.data.message);
       }
