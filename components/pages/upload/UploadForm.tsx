@@ -62,14 +62,15 @@ export default function UploadForm({
   };
 
   const clearForm = () => {
+    setSchoolName("");
+    setFileData([]);
+    
     setTimeout(() => {
       setShowError(false);
-      setSchoolName("");
     }, 3000);
 
     setTimeout(() => {
       setShowSuccess(false);
-      setFileData([]);
     }, 3000);
   };
 
@@ -125,6 +126,12 @@ export default function UploadForm({
 
   return (
     <div className="border border-white bg-white p-6 z-30 rounded-lg mt-32 w-2/5 mx-auto flex flex-col gap-6 justify-center items-center">
+      {showSuccess && (
+        <div className="fixed top-4 right-4 text-green-800 font-regular bg-white rounded-xl flex justify-center items-center h-12 w-[20rem]">
+          Data Saved Successfully
+        </div>
+      )}
+
       <div className="w-4/5 mx-auto flex flex-col justify-center items-start gap-3">
         {/* School Dropdown */}
         <label
