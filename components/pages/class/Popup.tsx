@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const Popup = ({ schoolId }: { schoolId: number; }) => {
+const Popup = ({ schoolName }: { schoolName: string; }) => {
   const [className, setClassName] = useState<string>("");
 
   const saveSchool = async () => {
@@ -24,7 +24,7 @@ const Popup = ({ schoolId }: { schoolId: number; }) => {
 
     try {
       const res = await axios.post(
-        `/api/school/${schoolId}/add`,
+        `/api/school/${schoolName}/add`,
         {
           className,
         },

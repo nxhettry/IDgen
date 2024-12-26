@@ -3,19 +3,17 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 const SchoolCard = ({
-  idx,
   date,
-  sheetName,
+  schoolName,
 }: {
-  idx: number;
   date: string;
-  sheetName: string;
+  schoolName: string;
 }) => {
   const [isCardHovered, setIsCardHovered] = useState(false);
 
   return (
     <Link
-      href={`/schools/${idx}`}
+      href={`/schools/${schoolName}`}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => setIsCardHovered(false)}
       className={`h-40 w-64 rounded-xl z-20 ${
@@ -28,7 +26,7 @@ const SchoolCard = ({
           "transition-all ease-in-out duration-200 hover:-translate-x-2 hover:-translate-y-2"
         } bg-white rounded-xl text-center font-bold h-full w-full text-black flex justify-center items-center`}
       >
-        {sheetName}
+        {schoolName}
         <br />
         {date}
       </div>

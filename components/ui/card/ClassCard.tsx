@@ -3,19 +3,17 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 interface ClassCardProps {
-  schoolid: number;
-  index: number;
+  schoolName: string;
   date: string;
   className: string;
 }
 
-const ClassCard = ({ schoolid, index, date, className }: ClassCardProps) => {
+const ClassCard = ({ schoolName, date, className }: ClassCardProps) => {
   const [isCardHovered, setIsCardHovered] = useState<boolean>(false);
 
   return (
     <Link
-      key={index}
-      href={`/schools/${schoolid}/class/${index}`}
+      href={`/schools/${schoolName}/class/${className}`}
       onMouseEnter={() => setIsCardHovered(true)}
       onMouseLeave={() => setIsCardHovered(false)}
       className={`h-40 w-64 rounded-xl z-20 ${

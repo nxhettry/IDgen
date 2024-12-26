@@ -37,15 +37,17 @@ export default async function Schools() {
       <div className="h-full w-4/5 flex gap-4 flex-wrap overflow-y-scroll no-scrollbar justify-center items-start mx-auto rounded-xl p-3 text-black">
         {data.message.length > 0 &&
           data.message.map(
-            (item: { sheetName: string; createdAt: string }, index: number) => {
+            (
+              item: { schoolName: string; createdAt: string },
+              index: number
+            ) => {
               return (
                 <SchoolCard
                   key={index}
                   date={new Date(
                     data.message[0].createdAt
                   ).toLocaleDateString()}
-                  sheetName={item.sheetName}
-                  idx={index}
+                  schoolName={item.schoolName}
                 />
               );
             }

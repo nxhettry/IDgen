@@ -3,33 +3,54 @@ import Data from "@/models/DataSchema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 
-function getSchoolID(currentUrl: string) {
+function getschoolIndex(currentUrl: string) {
   const parts = currentUrl.split("/");
-  const schoolId = parts[3];
-  return schoolId;
+  return parts[3];
 }
 
 export async function POST(req: NextRequest) {
-  const className = await req.json();
-  const schoolId = parseInt(getSchoolID(req.nextUrl.pathname));
+  const { className } = await req.json();
+  const schoolIndex = parseInt(getschoolIndex(req.nextUrl.pathname));
 
-  const session = await getServerSession(authOptions);
-
-  if (!schoolId || !className || !session.user) {
+  if (!schoolIndex || !className) {
     return NextResponse.json({
       status: 400,
-      message: "An error occured. Please try again later.",
+      message: "IOnvalid school index or class name",
     });
   }
+
+  // Getting UId from session
+  const session = (await getServerSession(authOptions)) as {
+    user: { _id: string };
+  };
+  if (!session?.user?._id) {
+    return NextResponse.json({
+      status: 401,
+      message: "Unauthorized access. Please log in.",
+    });
+  }
+
 
   try {
     const allSchools = await Data.find({ userId: session.user._id });
 
-    const toUpdateSchool = allSchools[schoolId];
+    const toUpdateSchool = allSchools[schoolIndex];
+
+    const classes = toUpdateSchool.data;
+
+    const dataToSave = {
+      className,
+      students: [],
+    };
+
+    classes.push(dataToSave);
+    toUpdateSchool.data = classes;
+
+    await toUpdateSchool.save();
 
     return NextResponse.json({
       status: 200,
-      message: toUpdateSchool.sheetName,
+      message: toUpdateSchool.data,
     });
   } catch (error) {
     console.log(error);

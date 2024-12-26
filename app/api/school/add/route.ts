@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 
 export async function POST(req: Request) {
-  const { schoolName } = await req.json();
+  const { schoolName }: { schoolName: string } = await req.json();
   const session = await getServerSession(authOptions);
   const { _id, isPremium } = session.user;
 
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   try {
     const data = new Data({
       userId: new mongoose.Types.ObjectId(_id),
-      sheetName: schoolName,
+      schoolName: schoolName,
       data: [],
     });
 
