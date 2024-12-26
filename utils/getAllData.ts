@@ -1,19 +1,7 @@
 import axios from "axios";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/authOptions";
-import { SessionType } from "@/types/SessionType";
 
-const getSession = async () => {
-  const session: SessionType | null = await getServerSession(authOptions);
-  let _id = "";
-  if (session) _id = session.user._id;
-
-  return _id;
-};
-
-export const getAllSchool = async () => {
-  const _id = await getSession();
-  if (_id === "") {
+export const getAllSchool = async (_id: string) => {
+  if (!_id) {
     return;
   }
 
@@ -34,10 +22,8 @@ export const getAllSchool = async () => {
   }
 };
 
-export const getAllClass = async () => {
-  const _id = await getSession();
-
-  if (_id === "") {
+export const getAllClass = async (_id: string) => {
+  if (!_id) {
     return;
   }
 

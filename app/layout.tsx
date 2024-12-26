@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/navbar/navbar";
-import BackgroundProvider from "@/providers/BackgroundProvider";
+import BackgroundProvider from "@/components/BackgroundProvider";
 import SessionWrapper from "@/providers/SessionWrapper";
 
 export const metadata: Metadata = {
