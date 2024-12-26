@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### Hello, I'm Nishan, The developer of this app.
 
-## Getting Started
+## Purpose of this app
 
-First, run the development server:
+This app is built to generate ID cards of students or employees through data uploaded via an excelsheet.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## How to use this app?
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- First clone the repo and hit
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+  ```
+  npm i
+  ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- setup Env :
 
-## Learn More
+  ```
+  GOOGLE_CLIENT_ID="enter your own data"
+  GOOGLE_CLIENT_SECRET="enter your secret"
+  DB_URI="enter your mongodb uri"
+  NEXTAUTH_SECRET="secret must be secret"
+  NEXTAUTH_URL="http://localhost:3000"
+  ```
 
-To learn more about Next.js, take a look at the following resources:
+- kickstart the app:
+  ```
+  npm run dev
+  ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# FOR DEVELOPERS
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+I am Writing this documentation as per the user flow on the app.
+Do explore anything un included yourself
 
-## Deploy on Vercel
+## 1. Authentication is Done Using NextAuth:
+    I have used Google Provider adn the config file can be found on the directory '@/lib/authOptions'
+    This is frequently used in server components and the api routes as well to get the user session on the server.
+    
+## 2. Once the user is logged in, the pages are located as follows:
+    - schoolpage: "@/app/schools/page.tsx"
+    - classpage: "@/app/schools/[name]/page.tsx"
+        The [name] is used to pass the schoolname dynamically
+    - Datapage: "@/app/schools/[name]/[clasName]/page.tsx
+        The [name] is for schoolname and [className] is for passing classname dynamically.
+    - Uploadpage: "@/app/uplaod/page.tsx"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 3. Lets talk about the api routes
+    - Authentication: "/api/auth/*"
+    - Uploadpage:
+        uploading of excel sheet:  "/api/uploadSheet/"
+    - Schoolpage: 
+        addnew: "/api/school/add"
+        getAll: "/api/school/getAll"
+    - Classpage: 
+        getall: "/api/school/[schoolName]/"
+        addnew: "/api/school/[schoolName]/add/"
+    - Datapage: 
+        getall: "/api/school/[schoolName]/[className]/"
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+This is all i guess.
+
+### Additional Info
+
+    - Some custom tailwind vars are made inside tailwind.config.ts
+    - The 'Types' folder contains custom types
+    - 'Providers' has session wrapper for nextAuth
+    - 'models' has schemas
+    - 'lib' has some config files for db
