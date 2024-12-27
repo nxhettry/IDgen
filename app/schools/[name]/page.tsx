@@ -37,7 +37,7 @@ const Class = async ({ params }: { params: { name: string } }) => {
   return (
     <div className="flex flex-col mt-24 gap-8">
       <h1 className="text-2xl w-full text-center font-bold underline text-white">Classes</h1>
-      <div className="flex justify-center items-center  gap-12">
+      <div className="flex flex-wrap justify-center items-center  gap-12">
         {classes.length > 0 &&
           classes.map((item: any, index: number) => {
             return (

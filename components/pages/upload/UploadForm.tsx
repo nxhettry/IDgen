@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { ExcelDataType } from "@/components/ui/table/Table";
+import { useRouter } from "next/navigation";
 
 export default function UploadForm({
   schoolNames,
@@ -26,6 +27,7 @@ export default function UploadForm({
   const [className, setClassName] = useState<string>("");
 
   const { data: session } = useSession();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,17 +56,17 @@ export default function UploadForm({
       });
 
       setShowSuccess(true);
+      router.push(`/schools/${schoolName}/${className}`);
     } catch (error) {
       console.log(error);
     }
 
-    clearForm();
   };
 
   const clearForm = () => {
     setSchoolName("");
     setFileData([]);
-    
+
     setTimeout(() => {
       setShowError(false);
     }, 3000);
