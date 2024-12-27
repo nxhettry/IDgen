@@ -14,7 +14,9 @@ const Upload = async () => {
 
   if (!session || !session.user.isPremium) {
     return (
-      <div className="mt-24 w-full text-center">Please login to continue</div>
+      <div className="mt-64 w-full text-center text-white text-2xl">
+        You need to be logged in as a premium user to use this feature
+      </div>
     );
   }
   const schoolNames: string[] = [];
@@ -39,12 +41,7 @@ const Upload = async () => {
     console.log(error);
   }
 
-  return (
-    <UploadForm
-      schoolNames={schoolNames}
-      classNames={classNames}
-    />
-  );
+  return <UploadForm schoolNames={schoolNames} classNames={classNames} />;
 };
 
 export default Upload;

@@ -35,6 +35,7 @@ export default async function DataPage({ params }: ParamsProps) {
       }
     );
     students = res.data.data;
+
   } catch (error) {
     console.log(error);
   }
@@ -52,7 +53,7 @@ export default async function DataPage({ params }: ParamsProps) {
       ) : (
         <div className="flex flex-col justify-center items-center gap-5">
           <p className="text-xl font-bold text-white">
-            No data to show Upload Data
+            No data to show <br />Upload Data ?
           </p>
           <Link href="/upload" className="z-30">
             <Button className="bg-white text-black hover:scale-110 hover:bg-white transition ease-in-out duration-200">
